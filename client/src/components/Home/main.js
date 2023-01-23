@@ -38,9 +38,7 @@ const Main = () => {
             } else {
                 let allplayers;
                 try {
-                    allplayers = await axios.get('/allplayers', {
-                        timeout: 5000
-                    })
+                    allplayers = await axios.get('/allplayers')
                 } catch (error) {
                     console.log(error)
                 }

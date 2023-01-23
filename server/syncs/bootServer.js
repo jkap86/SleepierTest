@@ -37,7 +37,7 @@ const bootServer = async (app, axios, db) => {
     app.set('users_table', users_table)
     app.set('leagues_table', leagues_table)
     app.set('trades_table', trades_table)
-
+    app.set('leaguemates', {})
 }
 
 module.exports = {

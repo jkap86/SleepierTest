@@ -51,7 +51,6 @@ const Playoffs_Scoring = async (axios, app) => {
         return 5000
     }
 
-
     const nextKickoff = Math.min(
         ...schedule[rounds[week]]
             .filter(x => x.gameSecondsRemaining !== '0')
@@ -61,8 +60,7 @@ const Playoffs_Scoring = async (axios, app) => {
         console.log('No Games in Progress..')
 
 
-        return (nextKickoff * 1000) - Date.now()
-
+        return Math.min(60 * 60 * 1000, (nextKickoff * 1000) - Date.now())
     }
     let player_scores = {}
 
@@ -91,6 +89,12 @@ const Playoffs_Scoring = async (axios, app) => {
         }))
 
     app.set('playoffs_scoring', player_scores)
+
+    const updated_schedule_week = await axios.get(`https://api.myfantasyleague.com/${state.season}/export?TYPE=nflSchedule&JSON=1`)
+
+    schedule[rounds[updated_schedule_week.data.nflSchedule.week - 18]] = updated_schedule_week.data.nflSchedule.matchup
+
+    app.set('schedule', schedule)
 
     console.log(`Games in Progress...`)
 

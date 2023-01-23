@@ -25,7 +25,7 @@ const PuppeteerMassScreenshots = require("./screen.shooter");
 const userAgent = require('user-agents');
 const { bootServer } = require('./syncs/bootServer');
 const { dailySync } = require('./syncs/daily_sync');
-const { getUser, updateUser, updateUser_Leagues } = require('./routes/user');
+const { getUser, updateUser, updateUser_Leagues, updateLeaguemates } = require('./routes/user');
 const { trades_sync } = require('./syncs/trades_sync')
 const { getTrades } = require('./routes/trades')
 const { Playoffs_Scoring } = require('./syncs/playoffs_scoring')
@@ -46,11 +46,11 @@ const db = new Sequelize(connectionString, { logging: false, dialect: 'postgres'
 axiosRetry(axios, {
     retries: 3,
     retryCondition: (error) => {
-        return error.code === 'ECONNABORTED' ||
+        return error.code === 'ECONNABORTED' || error.code === 'ERR_BAD_REQUEST' ||
             axiosRetry.isNetworkError(error) || axiosRetry.isRetryableError(error);
     },
     retryDelay: (retryCount) => {
-        return retryCount * 3000
+        return retryCount * 500
     },
     shouldResetTimeout: true
 })
@@ -80,11 +80,19 @@ setTimeout(async () => {
 }, delay)
 console.log(`Daily Sync in ${Math.floor(delay / (60 * 60 * 1000))} hours`)
 
+setTimeout(async () => {
+    await updateLeaguemates(axios, app)
+    console.log(`Leaguemate Sync Complete`)
 
-setInterval(() => {
-    trades_sync(axios, app)
-}, 1000 * 60 * 60)
+    await trades_sync(axios, app)
+}, 1 * 60 * 1000)
 
+setInterval(async () => {
+    await updateLeaguemates(axios, app)
+    console.log(`Leaguemate Sync Complete`)
+
+    await trades_sync(axios, app)
+}, 60 * 60 * 1000)
 
 
 
@@ -163,6 +171,29 @@ app.get('/user', async (req, res, next) => {
     next();
 }, async (req, res, next) => {
     const leagues_db = await updateUser_Leagues(axios, app, req)
+    let leaguemates = app.get('leaguemates')
+
+    if (!Object.keys(leaguemates).includes(req.query.season)) {
+        leaguemates[req.query.season] = {}
+    }
+
+    leagues_db.map(league => {
+        return league.users
+            .filter(u => u.user_id !== req.user_db.user.user_id)
+            .map(user => {
+                return leaguemates[req.query.season][user.user_id] = {
+
+                    avatar: user.avatar,
+                    user_id: user.user_db,
+                    username: user.display_name
+
+                }
+            })
+    })
+
+    app.set('leaguemates', leaguemates)
+
+
     const data = {
         user_id: req.user_db.user.user_id,
         username: req.user_db.user.username,

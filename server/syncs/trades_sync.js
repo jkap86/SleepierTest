@@ -11,11 +11,13 @@ const trades_sync = async (axios, app) => {
     const all_leagues = await leagues_table[state.league_season].findAll()
     const leagues_to_update = all_leagues
 
-    let transactions_week = []
+
     let i = 0
     const increment = 100
 
     while (i <= leagues_to_update.length) {
+        let transactions_week = []
+
         await Promise.all(leagues_to_update
             .slice(i, Math.min(i + increment, leagues_to_update.length + 1))
             .map(async league => {
@@ -60,13 +62,16 @@ const trades_sync = async (axios, app) => {
 
                     })
             }))
+
+        try {
+            await trades_table[state.league_season].bulkCreate(transactions_week, { ignoreDuplicates: true })
+        } catch (error) {
+            console.log(error)
+        }
+
         i += increment
     }
-    try {
-        await trades_table[state.league_season].bulkCreate(transactions_week, { ignoreDuplicates: true })
-    } catch (error) {
-        console.log(error)
-    }
+
 
     console.log(`Transactions sync completed at ${new Date()}`)
 }
