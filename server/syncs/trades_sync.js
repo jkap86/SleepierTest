@@ -11,6 +11,7 @@ const trades_sync = async (axios, app) => {
 
     const total_leagues = await leagues_table[state.league_season].count()
 
+
     let i = 0
     const increment = 500
 
@@ -20,6 +21,7 @@ const trades_sync = async (axios, app) => {
             offset: i,
             limit: increment
         })
+
         const leagues_to_update = all_leagues
 
         console.log(`Updating trades for ${i + 1}-${Math.min(i + 1 + increment, leagues_to_update.length)} of ${total_leagues} Leagues...`)
@@ -27,7 +29,6 @@ const trades_sync = async (axios, app) => {
         let transactions_week = []
 
         await Promise.all(leagues_to_update
-            .slice(i, Math.min(i + increment, leagues_to_update.length + 1))
             .map(async league => {
                 let transactions_league;
                 let transactions_league_prev;
