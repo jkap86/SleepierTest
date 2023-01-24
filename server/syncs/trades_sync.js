@@ -8,14 +8,22 @@ const trades_sync = async (axios, app) => {
     const trades_table = app.get('trades_table')
 
     const state = app.get('state')
-    const all_leagues = await leagues_table[state.league_season].findAll()
-    const leagues_to_update = all_leagues
 
+    const total_leagues = await leagues_table[state.league_season].count()
 
     let i = 0
-    const increment = 100
+    const increment = 500
 
-    while (i <= leagues_to_update.length) {
+    while (i < total_leagues) {
+        const all_leagues = await leagues_table[state.league_season].findAll({
+            order: [['league_id', 'DESC']],
+            offset: i,
+            limit: increment
+        })
+        const leagues_to_update = all_leagues
+
+        console.log(`Updating trades for ${i + 1}-${Math.min(i + 1 + increment, leagues_to_update.length)} of ${total_leagues} Leagues...`)
+
         let transactions_week = []
 
         await Promise.all(leagues_to_update

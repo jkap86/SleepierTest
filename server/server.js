@@ -80,16 +80,13 @@ setTimeout(async () => {
 }, delay)
 console.log(`Daily Sync in ${Math.floor(delay / (60 * 60 * 1000))} hours`)
 
-setTimeout(async () => {
-    await updateLeaguemates(axios, app)
-    console.log(`Leaguemate Sync Complete`)
-
-    await trades_sync(axios, app)
-}, 1 * 60 * 1000)
-
 setInterval(async () => {
     await updateLeaguemates(axios, app)
     console.log(`Leaguemate Sync Complete`)
+
+}, 60 * 1000)
+
+setInterval(async () => {
 
     await trades_sync(axios, app)
 }, 60 * 60 * 1000)
