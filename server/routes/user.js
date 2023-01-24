@@ -118,7 +118,7 @@ const updateUser_Leagues = async (axios, app, req) => {
                     ])
                     let matchups;
 
-                    if (req.query.season === state.league_season && state.week > 0 && state.week < 19) {
+                    if (req.query.season === state.league_season && state.week > 0 && state.week < 19 && state.season_type === 'regular') {
                         try {
                             matchups = await axios.get(`https://api.sleeper.app/v1/league/${league_to_update.league_id}/matchups/${state.week}`)
                         } catch (error) {
@@ -141,7 +141,7 @@ const updateUser_Leagues = async (axios, app, req) => {
                         users: users.data.map(user => {
                             return {
                                 user_id: user.user_id,
-                                display_name: user.display_name,
+                                username: user.display_name,
                                 avatar: user.avatar
                             }
                         }),
@@ -231,7 +231,7 @@ const updateUser_Leagues = async (axios, app, req) => {
                         users: users.data.map(user => {
                             return {
                                 user_id: user.user_id,
-                                display_name: user.display_name,
+                                username: user.display_name,
                                 avatar: user.avatar
                             }
                         }),
@@ -318,7 +318,7 @@ const updateLeaguemates = async (axios, app) => {
 
     while (lm_count <= 100 && s < Object.keys(leaguemates).length) {
         const season = Object.keys(leaguemates)[s]
-        const leaguemates_season = Object.keys(leaguemates[season]).slice(0, 100 - s)
+        const leaguemates_season = Object.keys(leaguemates[season]).slice(0, 100)
 
         app.set('leaguemates', {
             ...leaguemates,
@@ -338,13 +338,12 @@ const updateLeaguemates = async (axios, app) => {
 
         while (i < leaguemates_season.length) {
             await Promise.all(leaguemates_season
-                .slice(i, Math.min(i + increment, leaguemates_season.length + 1))
                 .map(async lm => {
                     const user_db = await updateUser(axios, app, {
                         user: {
                             user_id: lm,
-                            avatar: leaguemates[season][lm].avatar,
-                            username: leaguemates[season][lm].username
+                            avatar: leaguemates[season][lm]?.avatar,
+                            username: leaguemates[season][lm]?.username
                         },
                         query: {
                             season: season

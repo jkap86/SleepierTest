@@ -62,13 +62,13 @@ const Leaguemates = ({
     ]
 
     const leaguemates_body = stateLeaguemates
-        .filter(x => x.display_name !== state_user.username)
+        .filter(x => x.username !== state_user.username)
         .sort((a, b) => b.leagues.length - a.leagues.length)
         .map(lm => {
             return {
                 id: lm.user_id,
                 search: {
-                    text: lm.display_name,
+                    text: lm.username,
                     image: {
                         src: lm.avatar,
                         alt: 'user avatar',
@@ -77,12 +77,12 @@ const Leaguemates = ({
                 },
                 list: [
                     {
-                        text: lm.display_name,
+                        text: lm.username,
                         colSpan: 3,
                         className: 'left',
                         image: {
                             src: lm.avatar,
-                            alt: lm.display_name,
+                            alt: lm.username,
                             type: 'user'
                         }
                     },

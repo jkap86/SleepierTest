@@ -80,18 +80,23 @@ setTimeout(async () => {
 }, delay)
 console.log(`Daily Sync in ${Math.floor(delay / (60 * 60 * 1000))} hours`)
 
-setInterval(async () => {
-    await updateLeaguemates(axios, app)
-    console.log(`Leaguemate Sync Complete`)
-
-}, 60 * 1000)
 
 setInterval(async () => {
 
     await trades_sync(axios, app)
 }, 60 * 60 * 1000)
 
+const leaguemates_sync = () => {
+    let interval = 60 * 1000
+    console.log('next leaguemates sync in 60 seconds')
+    setTimeout(async () => {
+        await updateLeaguemates(axios, app)
+        console.log('leaguemates sync complete')
+        leaguemates_sync()
+    }, interval)
+}
 
+leaguemates_sync()
 
 const playoffs_sync = async () => {
     let scoring_interval = await Playoffs_Scoring(axios, app)
@@ -182,7 +187,7 @@ app.get('/user', async (req, res, next) => {
 
                     avatar: user.avatar,
                     user_id: user.user_db,
-                    username: user.display_name
+                    username: user.username
 
                 }
             })
