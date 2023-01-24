@@ -32,8 +32,8 @@ const trades_sync = async (axios, app) => {
                 let transactions_league;
                 let transactions_league_prev;
                 try {
-                    transactions_league = await axios.get(`https://api.sleeper.app/v1/league/${league.dataValues.league_id}/transactions/${state.week}`)
-                    if (state.week > 1) {
+                    transactions_league = await axios.get(`https://api.sleeper.app/v1/league/${league.dataValues.league_id}/transactions/${state.season_type === 'regular' ? state.week : 1}`)
+                    if (state.season_type === 'regular' && state.week > 1) {
                         transactions_league_prev = await axios.get(`https://api.sleeper.app/v1/league/${league.dataValues.league_id}/transactions/${state.week - 1}`)
                     }
                 } catch (error) {

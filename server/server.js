@@ -81,10 +81,10 @@ setTimeout(async () => {
 console.log(`Daily Sync in ${Math.floor(delay / (60 * 60 * 1000))} hours`)
 
 
-setInterval(async () => {
+setTimeout(async () => {
 
     await trades_sync(axios, app)
-}, 60 * 60 * 1000)
+}, 20 * 1000)
 
 const leaguemates_sync = () => {
     let interval = 60 * 1000
@@ -208,7 +208,7 @@ app.get('/user', async (req, res, next) => {
 })
 
 app.get('/trades', async (req, res, next) => {
-    const trades_db = await getTrades(app)
+    const trades_db = await getTrades(app, req)
     res.send(trades_db)
 })
 
