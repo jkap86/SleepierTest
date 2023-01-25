@@ -49,7 +49,7 @@ const PlayerLeagues = ({ leagues_owned, leagues_taken, leagues_available }) => {
     const player_leagues_body = leagues_display.map(lo => {
         return {
             id: lo.league_id,
-            list: [
+            list: [[
                 {
                     text: lo.name,
                     colSpan: 3,
@@ -76,12 +76,12 @@ const PlayerLeagues = ({ leagues_owned, leagues_taken, leagues_available }) => {
                 },
                 tab === 'Taken' ?
                     {
-                        text: lo.manager?.display_name,
+                        text: lo.manager?.username,
                         colSpan: 2,
                         className: 'left end',
                         image: {
                             src: lo.manager?.avatar,
-                            alt: lo.manager?.display_name,
+                            alt: lo.manager?.username,
                             type: 'user'
                         }
                     }
@@ -89,7 +89,7 @@ const PlayerLeagues = ({ leagues_owned, leagues_taken, leagues_available }) => {
                     {
                         colSpan: 0
                     }
-            ]
+            ]]
         }
     })
 

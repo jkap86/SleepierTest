@@ -86,7 +86,7 @@ const Players = ({
                         type: 'player'
                     }
                 },
-                list: [
+                list: [[
                     {
                         text: stateAllPlayers[player.id]?.full_name || `INACTIVE PLAYER`,
                         colSpan: 4,
@@ -127,7 +127,7 @@ const Players = ({
                         colSpan: 1,
                         className: 'yellow'
                     }
-                ],
+                ]],
                 secondary_table: (
                     <PlayerLeagues
                         leagues_owned={player.leagues_owned}

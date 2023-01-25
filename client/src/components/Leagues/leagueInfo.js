@@ -36,26 +36,28 @@ const LeagueInfo = ({
             return {
                 id: team.roster_id,
                 list: [
-                    {
-                        text: league.users.find(x => x.user_id === team.owner_id)?.display_name || 'Orphan',
-                        colSpan: 5,
-                        className: 'left',
-                        image: {
-                            src: league.users.find(x => x.user_id === team.owner_id)?.avatar,
-                            alt: 'user avatar',
-                            type: 'user'
+                    [
+                        {
+                            text: league.users.find(x => x.user_id === team.owner_id)?.username || 'Orphan',
+                            colSpan: 5,
+                            className: 'left',
+                            image: {
+                                src: league.users.find(x => x.user_id === team.owner_id)?.avatar,
+                                alt: 'user avatar',
+                                type: 'user'
+                            }
+                        },
+                        {
+                            text: team.settings.wins + '-' + team.settings.losses + (team.settings.ties > 0 ? '-' + team.settings.ties : ''),
+                            colSpan: 2
+                        },
+                        {
+                            text: (
+                                parseFloat(team.settings.fpts + '.' + (team.settings.fpts_decimal || '00'))
+                            ).toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 }),
+                            colSpan: 3
                         }
-                    },
-                    {
-                        text: team.settings.wins + '-' + team.settings.losses + (team.settings.ties > 0 ? '-' + team.settings.ties : ''),
-                        colSpan: 2
-                    },
-                    {
-                        text: (
-                            parseFloat(team.settings.fpts + '.' + (team.settings.fpts_decimal || '00'))
-                        ).toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 }),
-                        colSpan: 3
-                    }
+                    ]
                 ]
             }
         })
@@ -125,7 +127,7 @@ const LeagueInfo = ({
         ...display.map((starter, index) => {
             return {
                 id: starter,
-                list: [
+                list: [[
                     {
                         text: secondaryContent === 'Lineup' ? (position_abbrev[league.roster_positions[index]] || '-')
                             : stateAllPlayers[starter]?.position,
@@ -155,7 +157,7 @@ const LeagueInfo = ({
                             : '-',
                         colSpan: 3
                     }
-                ]
+                ]]
             }
         })
     ]
@@ -163,7 +165,7 @@ const LeagueInfo = ({
         [
             {
                 id: 'Type',
-                list: [
+                list: [[
                     {
                         text: league.settings['type'] === 2 ? 'Dynasty'
                             : league.settings['type'] === 1 ? 'Keeper'
@@ -174,11 +176,11 @@ const LeagueInfo = ({
                         text: league.settings['best_ball'] === 1 ? 'Bestball' : 'Standard',
                         colSpan: 11
                     },
-                ]
+                ]]
             },
             {
                 id: 'Trade Deadline',
-                list: [
+                list: [[
                     {
                         text: 'Trade Deadline',
                         colSpan: 11
@@ -187,11 +189,11 @@ const LeagueInfo = ({
                         text: 'Week ' + league.settings['trade_deadline'],
                         colSpan: 11
                     }
-                ]
+                ]]
             },
             {
                 id: 'Daily Waivers',
-                list: [
+                list: [[
                     {
                         text: 'Waivers',
                         colSpan: 11
@@ -201,7 +203,7 @@ const LeagueInfo = ({
                                 ${league.settings['daily_waivers_hour'] > 12 ? (league.settings['daily_waivers_hour'] - 12) + ' pm' : (league.settings['daily_waivers_hour'] || '12') + 'am'} `,
                         colSpan: 11
                     }
-                ]
+                ]]
             }
         ]
 

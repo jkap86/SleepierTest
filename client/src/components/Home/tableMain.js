@@ -55,7 +55,7 @@ const TableMain = ({ id, type, headers, body, page, setPage, itemActive, setItem
         }
 
 
-        <table className={type}>
+        <table id={id} className={type}>
             {
                 caption ?
                     <caption>
@@ -104,57 +104,61 @@ const TableMain = ({ id, type, headers, body, page, setPage, itemActive, setItem
                         ?.slice(Math.max(((page || 1) - 1) * 25, 0), (((page || 1) - 1) * 25) + 25)
                         ?.map((item, index) =>
                             <tbody key={index}
-                                className={itemActive === item.id ? 'active' : ''}
+                                className={itemActive === item.id ? 'active trade_row' : 'trade_row'}
                             >
-                                <tr className={`${type}_wrapper ${itemActive === item.id ? 'active' : ''}`}>
-                                    <td
-                                        colSpan={item.list.reduce((acc, cur) => acc + (cur.colSpan || 0), 0)}
-                                    >
-                                        <table className={`${type}_body`}>
-                                            <tbody>
-                                                <tr
-                                                    className={`${type} click ${itemActive === item.id ? 'active' : ''}`}
-                                                    onClick={setItemActive ? () => setItemActive(prevState => prevState === item.id ? '' : item.id) : null}
-                                                >
-                                                    {
-                                                        item.list
-                                                            .filter(x => x.text)
-                                                            .map((key, index) =>
-                                                                <td
-                                                                    key={index}
-                                                                    colSpan={key.colSpan}
-                                                                    className={key.className}
-                                                                >
-                                                                    {
-                                                                        key.image ?
-                                                                            <p>
-                                                                                {
-                                                                                    avatar(
-                                                                                        key.image.src, key.image.alt, key.image.type
-                                                                                    )
-                                                                                }
-                                                                                {key.text}
-                                                                            </p>
-                                                                            :
-                                                                            key.text
-                                                                    }
-                                                                </td>
-                                                            )
-                                                    }
-                                                </tr>
-                                                {
-                                                    (itemActive !== item.id || !item.secondary_table) ? null :
-                                                        <tr className={`${type}2 click ${itemActive === item.id ? 'active' : ''}`}
+                                {
+                                    item.list.map((list_item, index) =>
+                                        <tr className={`${type}_wrapper ${itemActive === item.id ? 'active' : ''}`}>
+                                            <td
+                                                colSpan={list_item.reduce((acc, cur) => acc + (cur.colSpan || 0), 0)}
+                                            >
+                                                <table className={`${type}_body`}>
+                                                    <tbody>
+                                                        <tr
+                                                            className={`${type} click ${itemActive === item.id ? 'active' : ''}`}
+                                                            onClick={setItemActive ? () => setItemActive(prevState => prevState === item.id ? '' : item.id) : null}
                                                         >
-                                                            <td colSpan={item.list.reduce((acc, cur) => acc + cur.colSpan, 0)}>
-                                                                {item.secondary_table}
-                                                            </td>
+                                                            {
+                                                                list_item
+                                                                    .filter(x => x.text)
+                                                                    .map((key, index) =>
+                                                                        <td
+                                                                            key={index}
+                                                                            colSpan={key.colSpan}
+                                                                            className={key.className}
+                                                                        >
+                                                                            {
+                                                                                key.image ?
+                                                                                    <p>
+                                                                                        {
+                                                                                            avatar(
+                                                                                                key.image.src, key.image.alt, key.image.type
+                                                                                            )
+                                                                                        }
+                                                                                        {key.text}
+                                                                                    </p>
+                                                                                    :
+                                                                                    key.text
+                                                                            }
+                                                                        </td>
+                                                                    )
+                                                            }
                                                         </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
+                                                        {
+                                                            (itemActive !== item.id || !item.secondary_table) ? null :
+                                                                <tr className={`${type}2 click ${itemActive === item.id ? 'active' : ''}`}
+                                                                >
+                                                                    <td colSpan={list_item.reduce((acc, cur) => acc + cur.colSpan, 0)}>
+                                                                        {item.secondary_table}
+                                                                    </td>
+                                                                </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
                             </tbody>
                         )
                     :

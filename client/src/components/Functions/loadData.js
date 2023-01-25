@@ -37,7 +37,7 @@ export const getLeagueData = (leagues, user_id, state, query_season) => {
                     )) || (league.users.find(x =>
                         roster.co_owners?.includes(x.user_id)
                     )) || {
-                        display_name: 'Orphan',
+                        username: 'Orphan',
                         user_id: 0
                     },
                     wins: roster.settings.wins,

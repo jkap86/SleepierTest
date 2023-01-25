@@ -44,42 +44,44 @@ const Leagues = ({
                 }
             },
             list: [
-                {
-                    text: league.name,
-                    colSpan: 4,
-                    className: 'left',
-                    image: {
-                        src: league.avatar,
-                        alt: league.name,
-                        type: 'league'
+                [
+                    {
+                        text: league.name,
+                        colSpan: 4,
+                        className: 'left',
+                        image: {
+                            src: league.avatar,
+                            alt: league.name,
+                            type: 'league'
+                        }
+                    },
+                    {
+                        text: `${league.userRoster.settings.wins}-${league.userRoster.settings.losses}`
+                            + (league.userRoster.settings.ties > 0 ? `-${league.userRoster.settings.ties}` : ''),
+                        colSpan: 1
+                    },
+                    {
+                        text: (
+                            (league.userRoster.settings.wins) /
+                            (league.userRoster.settings.wins + league.userRoster.settings.losses + league.userRoster.settings.ties)
+                        ).toLocaleString("en-US", { maximumFractionDigits: 4, minimumFractionDigits: 4 }).slice(1, 6),
+                        colSpan: 1
+                    },
+                    {
+                        text: league.userRoster.rank,
+                        colSpan: 1,
+                        className: league.userRoster.rank / league.rosters.length <= .25 ? 'green' :
+                            league.userRoster.rank / league.rosters.length >= .75 ? 'red' :
+                                null
+                    },
+                    {
+                        text: league.userRoster.rank_points,
+                        colSpan: 1,
+                        className: league.userRoster.rank_points / league.rosters.length <= .25 ? 'green' :
+                            league.userRoster.rank_points / league.rosters.length >= .75 ? 'red' :
+                                null
                     }
-                },
-                {
-                    text: `${league.userRoster.settings.wins}-${league.userRoster.settings.losses}`
-                        + (league.userRoster.settings.ties > 0 ? `-${league.userRoster.settings.ties}` : ''),
-                    colSpan: 1
-                },
-                {
-                    text: (
-                        (league.userRoster.settings.wins) /
-                        (league.userRoster.settings.wins + league.userRoster.settings.losses + league.userRoster.settings.ties)
-                    ).toLocaleString("en-US", { maximumFractionDigits: 4, minimumFractionDigits: 4 }).slice(1, 6),
-                    colSpan: 1
-                },
-                {
-                    text: league.userRoster.rank,
-                    colSpan: 1,
-                    className: league.userRoster.rank / league.rosters.length <= .25 ? 'green' :
-                        league.userRoster.rank / league.rosters.length >= .75 ? 'red' :
-                            null
-                },
-                {
-                    text: league.userRoster.rank_points,
-                    colSpan: 1,
-                    className: league.userRoster.rank_points / league.rosters.length <= .25 ? 'green' :
-                        league.userRoster.rank_points / league.rosters.length >= .75 ? 'red' :
-                            null
-                }
+                ]
             ],
             secondary_table: (
                 <LeagueInfo

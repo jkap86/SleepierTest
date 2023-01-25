@@ -69,19 +69,7 @@ const Main = () => {
         fetchData()
     }, [params.username, params.season])
 
-    useEffect(() => {
-        const fetchTrades = async () => {
-            const trades = await axios.get('/trades', {
-                params: {
-                    season: params.season
-                }
-            })
-            console.log(trades.data)
-        }
 
-        fetchTrades()
-
-    }, [params.season])
 
 
     return <>

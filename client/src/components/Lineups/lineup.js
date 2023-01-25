@@ -94,10 +94,10 @@ const Lineup = ({ matchup, opponent, starting_slots, league, optimal_lineup, sta
                 },
                 {
                     text: stateAllPlayers[slot.current_player]?.player_opponent
-                        .replace('at', '@')
-                        .replace('vs.', '')
-                        .replace(/\s/g, '')
-                        .trim()
+                        ?.replace('at', '@')
+                        ?.replace('vs.', '')
+                        ?.replace(/\s/g, '')
+                        ?.trim()
                         ||
                         '-',
                     colSpan: 3,

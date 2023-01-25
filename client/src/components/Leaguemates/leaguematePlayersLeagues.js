@@ -38,7 +38,7 @@ const LeaguematePlayersLeagues = ({
     const lm_body = leagues_lm.map(league => {
         return {
             id: league.league_id,
-            list: [
+            list: [[
                 {
                     text: league.league.name,
                     colSpan: 4,
@@ -63,14 +63,14 @@ const LeaguematePlayersLeagues = ({
                         league.league.userRoster.rank / league.league.rosters.length >= .75 ? 'red' :
                             null
                 }
-            ]
+            ]]
         }
     })
 
     const user_body = leagues_user.map(league => {
         return {
             id: league.league_id,
-            list: [
+            list: [[
                 {
                     text: league.league.name,
                     colSpan: 4,
@@ -95,7 +95,7 @@ const LeaguematePlayersLeagues = ({
                         league.league.userRoster.rank / league.league.rosters.length >= .75 ? 'red' :
                             null
                 }
-            ]
+            ]]
         }
     })
 

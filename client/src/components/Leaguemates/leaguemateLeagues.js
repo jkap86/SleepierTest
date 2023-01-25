@@ -127,7 +127,7 @@ const LeaguemateLeagues = ({ stateAllPlayers, state_user, leaguemate }) => {
     const leaguemateLeagues_body = leaguemate.leagues.map((lm_league) => {
         return {
             id: lm_league.league_id,
-            list: [
+            list: [[
                 {
                     text: lm_league.name,
                     colSpan: 4,
@@ -175,7 +175,7 @@ const LeaguemateLeagues = ({ stateAllPlayers, state_user, leaguemate }) => {
                         lm_league.userRoster.rank_points / lm_league.rosters.length >= .75 ? 'red' :
                             null
                 }
-            ]
+            ]]
         }
     })
 
@@ -246,7 +246,7 @@ const LeaguemateLeagues = ({ stateAllPlayers, state_user, leaguemate }) => {
                         type: 'player'
                     }
                 },
-                list: [
+                list: [[
                     {
                         text: stateAllPlayers[player.id]?.full_name,
                         colSpan: 4,
@@ -273,7 +273,7 @@ const LeaguemateLeagues = ({ stateAllPlayers, state_user, leaguemate }) => {
                         text: stateAllPlayers[player.id] && (user_wins + '-' + user_losses + (user_ties > 0 ? `-${user_ties}` : '')),
                         colSpan: 3
                     }
-                ],
+                ]],
                 secondary_table: (
                     <LeaguematePlayersLeagues
                         state_user={state_user}

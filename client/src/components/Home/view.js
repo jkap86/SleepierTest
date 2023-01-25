@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, redirect, useParams } from "react-router-dom";
-
+import { loadingIcon } from '../Functions/misc';
 import { filterLeagues } from '../Functions/filterData';
 import Heading from "./heading";
 import Leagues from '../Leagues/leagues';
 import Lineups from '../Lineups/lineups';
 import Players from '../Players/players';
 import Leaguemates from '../Leaguemates/leaguemates';
+const Trades = React.lazy(() => import('../Trades/trades'))
 
 const View = ({
     stateState,
@@ -117,6 +118,16 @@ const View = ({
             setType2={setType2}
         />
         {display}
+
+        <React.Suspense fallback={loadingIcon}>
+            <div hidden={tab !== 'Trades'}>
+                <Trades
+                    stateState={stateState}
+                    stateAllPlayers={stateAllPlayers}
+                    state_user={state_user}
+                />
+            </div>
+        </React.Suspense>
     </>
 }
 

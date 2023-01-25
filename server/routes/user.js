@@ -320,15 +320,16 @@ const updateLeaguemates = async (axios, app) => {
         const season = Object.keys(leaguemates)[s]
         const leaguemates_season = Object.keys(leaguemates[season]).slice(0, 100)
 
+        let leaguemates_pending = {}
+        Object.keys(leaguemates[season])
+            .filter(lm => !leaguemates_season.includes(lm))
+            .map(lm => {
+                return leaguemates_pending[lm] = leaguemates[season][lm]
+            })
+
         app.set('leaguemates', {
             ...leaguemates,
-            [season]: {
-                ...Object.fromEntries(Object.keys(leaguemates[season])
-                    .filter(lm => !leaguemates_season.includes(lm))
-                    .map(lm => {
-                        return [lm, leaguemates[season[lm]]]
-                    }))
-            }
+            [season]: leaguemates_pending
         })
 
         let i = 0
@@ -336,7 +337,7 @@ const updateLeaguemates = async (axios, app) => {
 
         let lm_leagues = []
 
-        while (i < leaguemates_season.length) {
+        while (i < 100) {
             await Promise.all(leaguemates_season
                 .map(async lm => {
                     const user_db = await updateUser(axios, app, {

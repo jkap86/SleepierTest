@@ -24,7 +24,7 @@ const trades_sync = async (axios, app) => {
 
         const leagues_to_update = all_leagues
 
-        console.log(`Updating trades for ${i + 1}-${Math.min(i + 1 + increment, leagues_to_update.length)} of ${total_leagues} Leagues...`)
+        console.log(`Updating trades for ${i + 1}-${Math.min(i + 1 + increment, i + leagues_to_update.length)} of ${total_leagues} Leagues...`)
 
         let transactions_week = []
 
@@ -48,17 +48,29 @@ const trades_sync = async (axios, app) => {
                         const managers = transaction.roster_ids.map(roster_id => {
                             const user_id = league.dataValues.rosters.find(x => x.roster_id === roster_id)?.owner_id
                             const user = league.dataValues.users.find(x => x.user_id === user_id)
-                            return user
+                            return {
+                                ...user,
+                                roster_id: roster_id
+                            }
                         })
 
-                        if (transaction.type === 'trade') {
+                        const draft_picks = transaction.draft_picks.map(pick => {
+                            const user_id = league.dataValues.rosters.find(x => x.roster_id === pick.roster_id)?.owner_id
+                            const user = league.dataValues.users.find(x => x.user_id === user_id)
+                            return {
+                                ...pick,
+                                original_user: user
+                            }
+                        })
+
+                        if (transaction.type === 'trade' && transaction.adds) {
                             return transactions_week.push({
                                 transaction_id: transaction.transaction_id,
                                 status_updated: new Date(transaction.status_updated),
                                 managers: managers,
                                 adds: transaction.adds,
                                 drops: transaction.drops,
-                                draft_picks: transaction.draft_picks,
+                                draft_picks: draft_picks,
                                 league: {
                                     league_id: league.league_id,
                                     name: league.name,

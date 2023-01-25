@@ -82,9 +82,12 @@ console.log(`Daily Sync in ${Math.floor(delay / (60 * 60 * 1000))} hours`)
 
 
 setTimeout(async () => {
-
     await trades_sync(axios, app)
-}, 20 * 1000)
+}, 30 * 1000)
+
+setInterval(async () => {
+    await trades_sync(axios, app)
+}, 15 * 60 * 1000)
 
 const leaguemates_sync = () => {
     let interval = 60 * 1000
@@ -186,7 +189,7 @@ app.get('/user', async (req, res, next) => {
                 return leaguemates[req.query.season][user.user_id] = {
 
                     avatar: user.avatar,
-                    user_id: user.user_db,
+                    user_id: user.user_id,
                     username: user.username
 
                 }
