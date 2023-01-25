@@ -112,7 +112,7 @@ const Trades = ({
                             {
                                 text: <ol>
                                     {
-                                        Object.keys(trade.adds || {}).filter(a => trade.adds[a] === m.roster_id).map(player_id =>
+                                        Object.keys(trade.adds || {}).filter(a => trade.adds[a] === m?.roster_id).map(player_id =>
                                             <li>+ {stateAllPlayers[player_id]?.full_name}</li>
                                         )
                                     }
