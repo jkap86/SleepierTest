@@ -10,7 +10,7 @@ const Trades = ({
     state_user,
 }) => {
     const params = useParams();
-    const [stateTrades, setStateTrades] = useState([])
+    const [stateTrades, setStateTrades] = useState({})
     const [stateTradesFiltered, setStateTradesFiltered] = useState([])
     const [page, setPage] = useState(1)
     const [itemActive, setItemActive] = useState('');
@@ -18,22 +18,29 @@ const Trades = ({
     const [searched_manager, setSearched_Manager] = useState('')
     const [searched_league, setSearched_League] = useState('')
 
-    const fetchTrades = async (page) => {
-        const trades = await axios.get('/trades', {
-            params: {
-                season: params.season,
-                page: page
-            }
-        })
-        console.log(trades.data)
-        setStateTrades(trades.data)
-
+    const fetchTrades = async () => {
+        let trades;
+        let p = 0;
+        while (p === 0 || p * 1000 < trades?.data?.count) {
+            trades = await axios.get('/trades', {
+                params: {
+                    season: params.season,
+                    page: p
+                }
+            })
+            console.log(trades.data)
+            setStateTrades(prevState => p === 0 ? trades.data : {
+                count: trades.data.count,
+                trades: [...prevState.trades || [], ...trades.data.trades]
+            })
+            p += 1
+        }
     }
 
 
     useEffect(() => {
         const filterTrades = () => {
-            let trades = stateTrades
+            let trades = stateTrades.trades || []
             let trades_filtered1;
             let trades_filtered2;
             let trades_filtered3;
@@ -58,10 +65,10 @@ const Trades = ({
 
     useEffect(() => {
 
-        console.log(page)
-        fetchTrades(page)
 
-    }, [page])
+        fetchTrades()
+
+    }, [])
 
 
     const trades_headers = [
@@ -178,7 +185,7 @@ const Trades = ({
 
     stateTradesFiltered.map(trade => {
         return trade.managers.map(manager => {
-            return managers_dict[manager?.user_id] = manager.username
+            return managers_dict[manager?.user_id] = manager?.username
         })
     })
 
@@ -191,7 +198,7 @@ const Trades = ({
 
 
     return <>
-        {stateTradesFiltered.length} Trades
+        <h4>{stateTrades.trades?.length} out of {stateTrades.count} Trades</h4>
         <div className="search_wrapper">
             <Search
                 id={'By Player'}
