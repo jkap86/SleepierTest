@@ -118,7 +118,7 @@ const Trades = ({
                                     }
                                     {
                                         trade.draft_picks
-                                            .filter(p => p.owner_id === m.roster_id)
+                                            .filter(p => p.owner_id === m?.roster_id)
                                             .sort((a, b) => (a.season) - b.season || a.round - b.round)
                                             .map(pick =>
                                                 <li>
@@ -135,13 +135,13 @@ const Trades = ({
                             {
                                 text: <ol>
                                     {
-                                        Object.keys(trade.drops || {}).filter(d => trade.drops[d] === m.roster_id).map(player_id =>
+                                        Object.keys(trade.drops || {}).filter(d => trade.drops[d] === m?.roster_id).map(player_id =>
                                             <li>- {stateAllPlayers[player_id]?.full_name}</li>
                                         )
                                     }
                                     {
                                         trade.draft_picks
-                                            .filter(p => p.previous_owner_id === m.roster_id)
+                                            .filter(p => p.previous_owner_id === m?.roster_id)
                                             .sort((a, b) => (a.season) - b.season || a.round - b.round)
                                             .map(pick =>
                                                 <li className="end">
