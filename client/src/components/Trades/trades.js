@@ -174,7 +174,7 @@ const Trades = ({
 
     stateTradesFiltered.map(trade => {
         return trade.managers.map(manager => {
-            return manager && managers_dict[manager?.user_id] = manager.username
+            return managers_dict[manager?.user_id] = manager.username
         })
     })
 
