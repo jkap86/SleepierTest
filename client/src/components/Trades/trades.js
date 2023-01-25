@@ -18,6 +18,18 @@ const Trades = ({
     const [searched_manager, setSearched_Manager] = useState('')
     const [searched_league, setSearched_League] = useState('')
 
+    const fetchTrades = async (page) => {
+        const trades = await axios.get('/trades', {
+            params: {
+                season: params.season,
+                page: page
+            }
+        })
+        console.log(trades.data)
+        setStateTrades(trades.data)
+
+    }
+
 
     useEffect(() => {
         const filterTrades = () => {
@@ -45,19 +57,11 @@ const Trades = ({
     }, [stateTrades, searched_player, searched_manager])
 
     useEffect(() => {
-        const fetchTrades = async () => {
-            const trades = await axios.get('/trades', {
-                params: {
-                    season: params.season
-                }
-            })
-            console.log(trades.data)
-            setStateTrades(trades.data)
-        }
 
-        fetchTrades()
+        console.log(page)
+        fetchTrades(page)
 
-    }, [params.season])
+    }, [page])
 
 
     const trades_headers = [
