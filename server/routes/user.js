@@ -69,7 +69,7 @@ const updateUser_Leagues = async (axios, app, req) => {
     const cutoff = new Date(new Date() - (15 * 60 * 1000))
     const league_ids = req.league_ids || req.user_db.league_ids
     const keys = ["name", "avatar", "best_ball", "type", "settings", "scoring_settings", "roster_positions",
-        "users", "rosters", "updatedAt"]
+        "users", "rosters", "drafts", "updatedAt"]
 
     let keys_to_update = keys
     if (req.query.season === state.league_season && state.week > 0 && state.week < 19) {
@@ -114,8 +114,15 @@ const updateUser_Leagues = async (axios, app, req) => {
                     const [league, users, rosters] = await Promise.all([
                         await axios.get(`https://api.sleeper.app/v1/league/${league_to_update.league_id}`),
                         await axios.get(`https://api.sleeper.app/v1/league/${league_to_update.league_id}/users`),
-                        await axios.get(`https://api.sleeper.app/v1/league/${league_to_update.league_id}/rosters`),
+                        await axios.get(`https://api.sleeper.app/v1/league/${league_to_update.league_id}/rosters`)
+
                     ])
+                    let drafts;
+
+                    if (!['in_season', 'complete'].includes(league_to_update.status)) {
+                        drafts = await axios.get(`https://api.sleeper.app/v1/league/${league_to_update.league_id}/drafts`)
+                    }
+
                     let matchups;
 
                     if (req.query.season === state.league_season && state.week > 0 && state.week < 19 && state.season_type === 'regular') {
@@ -157,6 +164,14 @@ const updateUser_Leagues = async (axios, app, req) => {
                                 co_owners: roster.co_owners
                             }
                         }),
+                        drafts: drafts?.data ? drafts.data.map(draft => {
+                            return {
+                                draft_id: draft.draft_id,
+                                status: draft.status,
+                                rounds: draft.settings.rounds,
+                                draft_order: draft.draft_order
+                            }
+                        }) : league_to_update.drafts,
                         [`matchups_${state.week}`]: matchups?.data,
                         updatedAt: Date.now()
                     }
@@ -190,10 +205,11 @@ const updateUser_Leagues = async (axios, app, req) => {
                 .map(async league_to_add => {
                     let league, users, rosters;
                     try {
-                        [league, users, rosters] = await Promise.all([
+                        [league, users, rosters, drafts] = await Promise.all([
                             await axios.get(`https://api.sleeper.app/v1/league/${league_to_add}`),
                             await axios.get(`https://api.sleeper.app/v1/league/${league_to_add}/users`),
                             await axios.get(`https://api.sleeper.app/v1/league/${league_to_add}/rosters`),
+                            await axios.get(`https://api.sleeper.app/v1/league/${league_to_add}/drafts`),
                         ])
                     } catch (error) {
                         console.log(error)
@@ -245,6 +261,14 @@ const updateUser_Leagues = async (axios, app, req) => {
                                 players: roster.players,
                                 owner_id: roster.owner_id,
                                 co_owners: roster.co_owners
+                            }
+                        }),
+                        drafts: drafts.data.map(draft => {
+                            return {
+                                draft_id: draft.draft_id,
+                                status: draft.status,
+                                rounds: draft.settings.rounds,
+                                draft_order: draft.draft_order
                             }
                         }),
                         ...matchups

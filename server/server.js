@@ -26,7 +26,7 @@ const userAgent = require('user-agents');
 const { bootServer } = require('./syncs/bootServer');
 const { dailySync } = require('./syncs/daily_sync');
 const { getUser, updateUser, updateUser_Leagues, updateLeaguemates } = require('./routes/user');
-const { trades_sync } = require('./syncs/trades_sync')
+const { updateTrades } = require('./syncs/trades_sync')
 const { getTrades } = require('./routes/trades')
 const { Playoffs_Scoring } = require('./syncs/playoffs_scoring')
 const { getPlayoffLeague } = require('./routes/league')
@@ -81,13 +81,18 @@ setTimeout(async () => {
 console.log(`Daily Sync in ${Math.floor(delay / (60 * 60 * 1000))} hours`)
 
 
-setTimeout(async () => {
-    await trades_sync(axios, app)
-}, 5 * 60 * 1000)
 
-setInterval(async () => {
-    await trades_sync(axios, app)
-}, 60 * 60 * 1000)
+const trades_sync = () => {
+    let interval = 60 * 1000
+    console.log('next trades sync in 60 seconds')
+    setTimeout(async () => {
+        await updateTrades(axios, app)
+        console.log('trades sync complete')
+        trades_sync()
+    }, interval)
+}
+
+trades_sync()
 
 const leaguemates_sync = () => {
     let interval = 60 * 1000
@@ -98,8 +103,8 @@ const leaguemates_sync = () => {
         leaguemates_sync()
     }, interval)
 }
+setTimeout(leaguemates_sync, 15000)
 
-leaguemates_sync()
 
 const playoffs_sync = async () => {
     let scoring_interval = await Playoffs_Scoring(axios, app)
