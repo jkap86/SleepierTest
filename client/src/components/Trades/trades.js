@@ -92,7 +92,7 @@ const Trades = ({
                 list: [
                     [
                         {
-                            text: new Date(trade.status_updated).toLocaleDateString('en-US') + ' ' + new Date(trade.status_updated).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }),
+                            text: new Date(parseInt(trade.status_updated)).toLocaleDateString('en-US') + ' ' + new Date(parseInt(trade.status_updated)).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" }),
                             colSpan: 2,
                             className: 'small'
                         },

@@ -59,7 +59,7 @@ const updateTrades = async (axios, app) => {
                     if (transaction.type === 'trade' && transaction.adds) {
                         return transactions_week.push({
                             transaction_id: transaction.transaction_id,
-                            status_updated: new Date(transaction.status_updated),
+                            status_updated: transaction.status_updated,
                             managers: managers,
                             adds: transaction.adds,
                             drops: transaction.drops,
