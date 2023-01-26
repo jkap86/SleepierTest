@@ -78,7 +78,7 @@ const updateTrades = async (axios, app) => {
         }))
 
     try {
-        await trades_table[state.league_season].bulkCreate(transactions_week, { ignoreDuplicates: true })
+        await trades_table[state.league_season].bulkCreate(transactions_week, { updateOnDuplicate: ['status_updated'] })
     } catch (error) {
         console.log(error)
     }
